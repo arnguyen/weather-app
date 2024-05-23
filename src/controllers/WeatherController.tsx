@@ -40,11 +40,6 @@ const boxStyle = {
   }
 }
 
-const Page = styled.div({
-  background: "rgba(251,247,245, 0.8)",
-  height: "100vh"
-});
-
 export const WeatherController: React.FC = () => {
   const [weatherData, setWeatherData] = React.useState<any>();
   const [showSupport, setShowSupport] = React.useState<boolean>(false);
@@ -117,7 +112,7 @@ export const WeatherController: React.FC = () => {
   )}, [specificDateWeatherData, selectedDay, selectedTime]);
 
   return (
-    <Page>
+    <div>
       <Box
         component="form"
         noValidate
@@ -210,6 +205,6 @@ export const WeatherController: React.FC = () => {
       >
         <Help />
       </IconButton>
-    </Page>
+    </div>
   )
 }
