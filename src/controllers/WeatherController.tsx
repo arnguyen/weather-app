@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "@emotion/styled";
 import { LocationOn, CalendarMonth, AccessTime, Search, Help, Close } from "@mui/icons-material";
 import { InputAdornment, TextField, MenuItem, Box, InputBase, IconButton, Divider, Modal } from "@mui/material";
 import { timeOfDay, days, intToDay } from "../helpers/constants.ts";
