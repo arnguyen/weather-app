@@ -42,6 +42,7 @@ const boxStyle = {
 
 const Page = styled.div({
   background: "rgba(251,247,245, 0.8)",
+  height: "100vh"
 });
 
 export const WeatherController: React.FC = () => {
