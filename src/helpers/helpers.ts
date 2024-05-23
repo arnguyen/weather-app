@@ -12,3 +12,11 @@ export const formatHour = (hour: number) => {
     return `${(hour % 12).toString()}:00 PM`
   }
 }
+
+export const isDateToday = (someDate) => {
+  const today = new Date()
+
+  return someDate.getUTCDate() === today.getDate() &&
+    someDate.getMonth() === today.getMonth() &&
+    someDate.getFullYear() === today.getFullYear()
+}

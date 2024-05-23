@@ -1,37 +1,51 @@
 import * as React from "react";
-import { InputAdornment, TextField, MenuItem, Box, InputBase, IconButton, Divider } from "@mui/material";
-import { LocationOn, CalendarMonth, AccessTime, Search } from "@mui/icons-material";
-import { timeOfDay, days, sampleData2 } from "../helpers/constants.ts";
+import styled from "@emotion/styled";
+import { LocationOn, CalendarMonth, AccessTime, Search, Help, Close } from "@mui/icons-material";
+import { InputAdornment, TextField, MenuItem, Box, InputBase, IconButton, Divider, Modal } from "@mui/material";
+import { timeOfDay, days, intToDay } from "../helpers/constants.ts";
+import { isDateToday } from "../helpers/helpers.ts";
 import { WeatherCard } from "../views/WeatherCard.tsx";
 
 const API_KEY = "7NRACK6RMYQDSNF4HR647ALKD";
 
-const intToDay = {
-  0: "Sunday",
-  1: "Monday",
-  2: "Tuesday",
-  3: "Wednesday",
-  4: "Thursday",
-  5: "Friday",
-  6: "Saturday"
+const modalStyle = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const supportButtonStyle = {
+  position: "absolute" as 'absolute',
+  bottom: 0,
+  right: 0,
+  '@media(max-width: 780px)': {
+    bottom: "unset",
+    right: "unset",
+    top: 0,
+    left: 0
+  }
+};
+
+const boxStyle = {
+  display: "block",
+  '@media(max-width: 780px)': {
+    width: "600px"
+  }
 }
 
-const isDateToday = (someDate) => {
-  const today = new Date()
+const Page = styled.div({
+  padding: "3ch"
+});
 
-  return someDate.getUTCDate() === today.getDate() &&
-    someDate.getMonth() === today.getMonth() &&
-    someDate.getFullYear() === today.getFullYear()
-}
-
-type WeatherControllerProps = {
-  temp?: string;
-}
-
-export const WeatherController: React.FC<WeatherControllerProps> = ({
-  temp
-}: WeatherControllerProps) => {
+export const WeatherController: React.FC = () => {
   const [weatherData, setWeatherData] = React.useState<any>();
+  const [showSupport, setShowSupport] = React.useState<boolean>(false);
   
   const locationRef = React.useRef<HTMLInputElement>();
   const [selectedDay, setSelectedDay] = React.useState<string>("Sunday");
@@ -59,7 +73,6 @@ export const WeatherController: React.FC<WeatherControllerProps> = ({
     });
 
     setWeatherData(apiWeatherData)
-    //setWeatherData(sampleData2)
   }, [setWeatherData])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,14 +94,14 @@ export const WeatherController: React.FC<WeatherControllerProps> = ({
     return undefined;
   }).filter((day: any) => !!day) : undefined;
 
-
   const weatherCards = React.useMemo(() => {
     if (!specificDateWeatherData) {
       return undefined;
     }
 
-    return specificDateWeatherData.map((day: any) => {
-      const isToday = isDateToday(new Date(day.datetime))
+    return specificDateWeatherData.map((day: any, idx: number) => {
+      const isToday = isDateToday(new Date(day.datetime));
+      const isFirstCard = idx === 0
       
       return (
         <WeatherCard
@@ -96,16 +109,17 @@ export const WeatherController: React.FC<WeatherControllerProps> = ({
           day={selectedDay}
           timeOfDay={selectedTime}
           isToday={isToday}
+          isFirstCard={isFirstCard}
         />
     )}
   )}, [specificDateWeatherData, selectedDay, selectedTime]);
 
   return (
-    <>
+    <Page>
       <Box
         component="form"
         noValidate
-        sx={{ display: "block" }}
+        sx={boxStyle}
       >
         <div>
           <InputBase
@@ -168,9 +182,32 @@ export const WeatherController: React.FC<WeatherControllerProps> = ({
         </div>
       </Box>
 
-      <Divider variant="middle" />
+      <Divider variant="middle" sx={{ "@media(max-width: 780px)": { width: "550px" } }} />
 
       {weatherCards}
-    </>
+
+      {showSupport && (
+        <Modal
+          open={showSupport}
+          onClose={() => setShowSupport(false)}
+        >
+          <Box sx={modalStyle}>
+            <IconButton sx={{ position: "absolute", right: 0, top: 0 }} type="button" onClick={() => setShowSupport(false)}><Close /></IconButton>
+            Welcome to Whether Weather! Use the search bar at the top to search for locations.
+            This forecast app shows each selected day in the next 30 days that has hourly forecast data.
+            Use the time selector to switch between morning, afternoon, or evening forecasts. If you have any
+            questions, please reach out to me <a href="mailto:ngandrewr@gmail.com">here</a>. Happy forecasting!
+          </Box>
+        </Modal>
+      )}
+
+      <IconButton 
+        type="button" 
+        onClick={() => setShowSupport(true)}
+        sx={supportButtonStyle}
+      >
+        <Help />
+      </IconButton>
+    </Page>
   )
 }
