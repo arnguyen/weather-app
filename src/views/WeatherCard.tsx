@@ -7,7 +7,7 @@ import { formatHour } from "../helpers/helpers.ts";
 
 const Card = styled.div({
   display: "inline-block",
-  margin: "3ch"
+  margin: "3ch",
 })
 
 const Header = styled.div<{ isFirstCard?: boolean }>(({ isFirstCard }) => ({

@@ -33,6 +33,7 @@ const supportButtonStyle = {
 };
 
 const boxStyle = {
+  paddingTop: "2ch",
   display: "block",
   '@media(max-width: 780px)': {
     width: "600px"
@@ -40,7 +41,7 @@ const boxStyle = {
 }
 
 const Page = styled.div({
-  padding: "3ch"
+  background: "rgba(251,247,245, 0.8)",
 });
 
 export const WeatherController: React.FC = () => {
